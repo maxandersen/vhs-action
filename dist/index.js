@@ -754,25 +754,25 @@ function install(version) {
         }
         switch (osPlatform) {
             case 'darwin': {
-                platform = 'Darwin';
+                platform = 'darwin';
                 break;
             }
             case 'win32': {
-                platform = 'Windows';
+                platform = 'windows';
                 ext = 'zip';
                 break;
             }
             case 'linux': {
-                platform = 'Linux';
+                platform = 'linux';
                 break;
             }
         }
         let dlUrl;
         const dirName = `vhs_${version}_${platform}_${arch}`;
         const archiveName = `${dirName}.${ext}`;
-        core.debug(`Looking for ${archiveName}`);
+        core.info(`Looking for ${archiveName}`);
         for (const asset of release.data.assets) {
-            core.info(`Checking asset ${asset.name}`);
+            core.info(`Checking asset ${asset.name} `);
             if (asset.name === archiveName) {
                 dlUrl = asset.url;
                 break;

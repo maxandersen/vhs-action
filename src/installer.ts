@@ -1,5 +1,6 @@
 import * as os from 'os'
 import * as path from 'path'
+import * as fs from 'fs'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as tc from '@actions/tool-cache'
@@ -81,9 +82,10 @@ export async function install(version: string): Promise<string> {
   const dirName = `vhs_${version}_${platform}_${arch}`
   const archiveName = `${dirName}.${ext}`
   core.info(`Looking for ${archiveName}`)
+  const archiveNameLower = archiveName.toLowerCase()
   for (const asset of release.data.assets) {
-    core.info(`Checking asset ${asset.name}`)
-    if (asset.name === archiveName) {
+    core.info(`Checking asset ${asset.name} matching ${archiveNameLower} `)
+    if (asset.name.toLowerCase() === archiveNameLower) {
       dlUrl = asset.url
       break
     }
@@ -115,9 +117,22 @@ export async function install(version: string): Promise<string> {
   const cachePath: string = await tc.cacheDir(extPath, cacheName, version)
   core.debug(`Cached to ${cachePath}`)
 
+  // Find the actual directory name case-insensitively
+  const entries = fs.readdirSync(cachePath)
+  const actualDirName = entries.find(
+    entry => entry.toLowerCase() === dirName.toLowerCase()
+  )
+  if (!actualDirName) {
+    return Promise.reject(
+      new Error(
+        `Unable to find extracted directory matching ${dirName} in ${cachePath}`
+      )
+    )
+  }
+
   const binPath: string = path.join(
     cachePath,
-    dirName,
+    actualDirName,
     osPlatform == 'win32' ? 'vhs.exe' : 'vhs'
   )
   core.debug(`Bin path is ${binPath}`)
