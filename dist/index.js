@@ -698,6 +698,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.install = install;
 const os = __importStar(__nccwpck_require__(857));
 const path = __importStar(__nccwpck_require__(6928));
+const fs = __importStar(__nccwpck_require__(9896));
 const core = __importStar(__nccwpck_require__(7484));
 const github = __importStar(__nccwpck_require__(3228));
 const tc = __importStar(__nccwpck_require__(3472));
@@ -754,16 +755,16 @@ function install(version) {
         }
         switch (osPlatform) {
             case 'darwin': {
-                platform = 'darwin';
+                platform = 'Darwin';
                 break;
             }
             case 'win32': {
-                platform = 'windows';
+                platform = 'Windows';
                 ext = 'zip';
                 break;
             }
             case 'linux': {
-                platform = 'linux';
+                platform = 'Linux';
                 break;
             }
         }
@@ -771,9 +772,10 @@ function install(version) {
         const dirName = `vhs_${version}_${platform}_${arch}`;
         const archiveName = `${dirName}.${ext}`;
         core.info(`Looking for ${archiveName}`);
+        const archiveNameLower = archiveName.toLowerCase();
         for (const asset of release.data.assets) {
-            core.info(`Checking asset ${asset.name} `);
-            if (asset.name === archiveName) {
+            core.info(`Checking asset ${asset.name} matching ${archiveNameLower} `);
+            if (asset.name.toLowerCase() === archiveNameLower) {
                 dlUrl = asset.url;
                 break;
             }
@@ -797,7 +799,13 @@ function install(version) {
         core.debug(`Extracted to ${extPath}`);
         const cachePath = yield tc.cacheDir(extPath, cacheName, version);
         core.debug(`Cached to ${cachePath}`);
-        const binPath = path.join(cachePath, dirName, osPlatform == 'win32' ? 'vhs.exe' : 'vhs');
+        // Find the actual directory name case-insensitively
+        const entries = fs.readdirSync(cachePath);
+        const actualDirName = entries.find(entry => entry.toLowerCase() === dirName.toLowerCase());
+        if (!actualDirName) {
+            return Promise.reject(new Error(`Unable to find extracted directory matching ${dirName} in ${cachePath}`));
+        }
+        const binPath = path.join(cachePath, actualDirName, osPlatform == 'win32' ? 'vhs.exe' : 'vhs');
         core.debug(`Bin path is ${binPath}`);
         return Promise.resolve(binPath);
     });
