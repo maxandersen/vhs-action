@@ -112,10 +112,10 @@ export async function install(version: string): Promise<string> {
   } else {
     extPath = await tc.extractTar(dlPath)
   }
-  core.debug(`Extracted to ${extPath}`)
+  core.info(`Extracted to ${extPath}`)
 
   const cachePath: string = await tc.cacheDir(extPath, cacheName, version)
-  core.debug(`Cached to ${cachePath}`)
+  core.info(`Cached to ${cachePath}`)
 
   // Find the actual directory name case-insensitively
   const entries = fs.readdirSync(cachePath)

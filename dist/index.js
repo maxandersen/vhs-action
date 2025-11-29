@@ -888,8 +888,9 @@ function run() {
             yield fonts.install();
             yield deps.install();
             const bin = yield intaller.install(version);
-            core.info('Adding VHS to PATH');
-            core.addPath(path.dirname(bin));
+            const pathtoadd = path.dirname(bin);
+            core.info('Adding VHS to PATH via ${pathtoadd}');
+            core.addPath(pathtoadd);
             // Unset the CI variable to prevent Termenv from ignoring terminal ANSI
             // sequences.
             core.exportVariable('CI', '');
