@@ -80,9 +80,9 @@ export async function install(version: string): Promise<string> {
   let dlUrl: string | undefined
   const dirName = `vhs_${version}_${platform}_${arch}`
   const archiveName = `${dirName}.${ext}`
-  core.debug(`Looking for ${archiveName}`)
+  core.info(`Looking for ${archiveName}`)
   for (const asset of release.data.assets) {
-    core.debug(`Checking asset ${asset.name}`)
+    core.info(`Checking asset ${asset.name}`)
     if (asset.name === archiveName) {
       dlUrl = asset.url
       break
