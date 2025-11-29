@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: charmbracelet/vhs-action@v1
+      - uses: agentstation/vhs-action@v1
         with:
           path: 'vhs.tape'
       - uses: devicons/public-upload-to-imgur@v2.2.2

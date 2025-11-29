@@ -713,14 +713,14 @@ function install(version) {
         if (version === 'latest') {
             core.debug('Getting latest release');
             release = yield octo.rest.repos.getLatestRelease({
-                owner: 'charmbracelet',
+                owner: 'agentstation',
                 repo: 'vhs'
             });
         }
         else {
             core.debug(`Getting release for version ${version}`);
             release = yield octo.rest.repos.getReleaseByTag({
-                owner: 'charmbracelet',
+                owner: 'agentstation',
                 repo: 'vhs',
                 tag: version
             });

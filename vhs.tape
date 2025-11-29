@@ -43,13 +43,14 @@
 Output vhs.gif
 Output vhs.mp4
 Output vhs.webm
+Output vhs.svg
 
 Set FontSize 46
 Set Width 1200
 Set Height 600
 Set PlaybackSpeed 2
 
-Type "echo Welcome to VHS Action! 📼"
+Type "echo Welcome to VHS Action with SVG Support!  📼"
 
 Sleep 500ms
 
