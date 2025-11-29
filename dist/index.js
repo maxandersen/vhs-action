@@ -796,9 +796,9 @@ function install(version) {
         else {
             extPath = yield tc.extractTar(dlPath);
         }
-        core.debug(`Extracted to ${extPath}`);
+        core.info(`Extracted to ${extPath}`);
         const cachePath = yield tc.cacheDir(extPath, cacheName, version);
-        core.debug(`Cached to ${cachePath}`);
+        core.info(`Cached to ${cachePath}`);
         // Find the actual directory name case-insensitively
         const entries = fs.readdirSync(cachePath);
         const actualDirName = entries.find(entry => entry.toLowerCase() === dirName.toLowerCase());
@@ -888,9 +888,8 @@ function run() {
             yield fonts.install();
             yield deps.install();
             const bin = yield intaller.install(version);
-            const pathtoadd = path.dirname(bin);
-            core.info('Adding VHS to PATH via ${pathtoadd}');
-            core.addPath(pathtoadd);
+            core.info('Adding VHS to PATH');
+            core.addPath(path.dirname(bin));
             // Unset the CI variable to prevent Termenv from ignoring terminal ANSI
             // sequences.
             core.exportVariable('CI', '');
